@@ -36,13 +36,18 @@ const minio = new Client({
 });
 
 // health check
-app.get('/health', async (_req, res) => {
+// health simples (não depende do MinIO)
+app.get('/health', (_req, res) => {
+  res.json({ ok: true, service: 'presign' });
+});
+
+// probe de MinIO (diagnóstico detalhado)
+app.get('/probe/minio', async (_req, res) => {
   try {
-    // só tenta listar buckets pra validar conexão
     const buckets = await minio.listBuckets();
     res.json({ ok: true, buckets: buckets.map(b => b.name) });
   } catch (e) {
-    res.status(500).json({ ok: false, error: e.message });
+    res.status(500).json({ ok: false, error: e.message, stack: e.stack });
   }
 });
 
