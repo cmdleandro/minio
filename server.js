@@ -46,6 +46,8 @@ app.get('/health', async (_req, res) => {
   }
 });
 
+app.get('/', (_req, res) => res.json({ ok: true, service: 'presign' }));
+
 // Presigned PUT (upload) => retorna URL para enviar o arquivo
 app.get('/presign/put', async (req, res) => {
   try {
