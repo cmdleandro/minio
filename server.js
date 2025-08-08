@@ -65,5 +65,15 @@ app.get('/presign/get', async (req, res) => {
   }
 });
 
+app.get('/probe/minio', async (_req, res) => {
+  try {
+    const buckets = await minio.listBuckets();
+    res.json({ ok: true, buckets: buckets.map(b => b.name) });
+  } catch (e) {
+    res.status(500).json({ ok: false, message: e.message, code: e.code, stack: e.stack });
+  }
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Presign API on :${PORT}`));
