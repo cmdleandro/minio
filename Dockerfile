@@ -1,8 +1,14 @@
 FROM node:18-alpine
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
+
+# 1) Copia os arquivos de definição do projeto
+COPY package.json package-lock.json ./
+
+# 2) Instala dependências produção
+RUN npm ci --omit=dev
+
+# 3) Copia o restante do código (server.js entre outros)
 COPY . .
-ENV NODE_ENV=production
+
 EXPOSE 3000
-CMD ["node","server.js"]
+CMD ["node", "server.js"]
